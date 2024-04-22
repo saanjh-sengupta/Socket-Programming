@@ -1,39 +1,41 @@
-#include <cstring>          // Include c string functions
-#include <iostream>         // Include input/output operations
-#include <netinet/in.h>     // Include structures for the internet domain address
-#include <sys/socket.h>     // Include socket functions
-#include <unistd.h>         // Include standard symbolic constants and types
+#include <iostream>                 // Includes input output streams
+#include <string>                   // Includes string functions
+#include <netinet/in.h>             // Includes structures for storing and accessing the internet domain access
+#include <sys/socket.h>             // Includes socket functions
+#include <unistd.h>                 // Includes standard symbolic constraints
 
 int main()
 {
-    // Create a socket for the client with an IPv4 and a TCP connection
+    // Created a client socket with IPv4 and TCP connection 
     int clientSocket = socket(AF_INET, SOCK_STREAM, 0);
 
-    // Declare a structure to hold the server address information
-    sockaddr_in serverAddress;          
-    serverAddress.sin_family = AF_INET;              // Set family address to IPv4
-    serverAddress.sin_port = htons(8080);           // Set port number to 8080
-    serverAddress.sin_addr.s_addr = INADDR_ANY;    // Set IP address to INADDR_ANY to connect to any available network interface
+    // Declaring a structure to hold the server address information 
+    sockaddr_in serverAddress;  
+    serverAddress.sin_family = AF_INET;                     // Supports IPv4 connections
+    serverAddress.sin_port = htons(8080);                   // Port 8080 is being used to establish the connection
+    serverAddress.sin_addr.s_addr = INADDR_ANY;             // Set to INADDR_ANY to listen to all available incoming connection
 
-    // Connect to the server 
-    connect(clientSocket, (struct sockaddr*)&serverAddress,
-    sizeof(serverAddress));
+    // Connection being established with the server
+    // reinterpret_cast is being used to convert sockaddr* into struct sockaddr*
+    connect(clientSocket, reinterpret_cast<struct sockaddr*>(&serverAddress), sizeof(serverAddress));
 
-    // Declare a message to send to the server
-    const char* message = "Hello Server!";
+    // String message being allocated in the stack memory 
+    std::string message = "Hello Server";
 
-    // Send the message to the server
-    send(clientSocket, message, std::strlen(message), 0);
+    // Client socket will be sending the message to the server socket
+    send(clientSocket, message.c_str(), message.size(), 0);
 
-    // Declare a buffer to store received data
+    // Character buffer being allocated to accept messages from the server
     char buffer[1024] = {0};
 
-    //Receive data from the server and store it in the buffer
+    // Information being received from the server
     recv(clientSocket, buffer, sizeof(buffer), 0);
 
-    // Print the received message from the server
-    std::cout << "Message from server : "  << buffer << "\n";
+    // Printing the message being sent from the server
+    std::cout << "Message from server: " << buffer << "\n";
 
     // Close the client socket
     close(clientSocket);
+
+    return 0;
 }
