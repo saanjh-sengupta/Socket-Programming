@@ -1,16 +1,25 @@
 #include "server.h"
 
+SharedPointerOfServer Server::onlyObject = nullptr;
+
 Server::~Server()
 {
-    if(clientSocket)
+    for(int socket : clientSockets)
     {
-        close(clientSocket);
+        close(socket);
     }
 
-    if(serverSocket)
+    close(serverSocket);
+}
+
+SharedPointerOfServer Server::GetInstance()
+{
+    if(!onlyObject)
     {
-        close(serverSocket);
+        onlyObject.reset(new Server());
     }
+
+    return onlyObject;
 }
 
 void Server::start()
@@ -22,19 +31,29 @@ void Server::start()
     serverAddress.sin_addr.s_addr = INADDR_ANY;
 
     bind(serverSocket, reinterpret_cast<struct sockaddr*>(&serverAddress), sizeof(serverAddress));
-    
+
     listen(serverSocket, 5);
 
-    clientSocket = accept(serverSocket, nullptr, nullptr);
+    int counter = 0;
 
-    char buffer[1024] = {0};
+    while(counter < 2)
+    {
+        int clientSock = accept(serverSocket, nullptr, nullptr);
+        
+        clientSockets.push_back(clientSock);
+        char buffer[1024] = {0};
 
-    recv(clientSocket, buffer, sizeof(buffer), 0);
+        recv(clientSock, buffer, sizeof(buffer), 0);
 
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::lock_guard<std::mutex> lk (mt);
+        std::cout << "Message from client: " << buffer << "\n";
 
-    std::cout << "Message from client: " << buffer << "\n";
+        std::string message = "Hi Client";
+        send(clientSock, message.c_str(), message.size(), 0);
 
-    std::string message = "Hi Client";
-    send(clientSocket, message.c_str(), message.size(), 0);
+        counter++;
+    }
+
+   
 }

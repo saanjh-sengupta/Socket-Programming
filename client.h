@@ -1,27 +1,32 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include <cstring>          // Include c string functions
-#include <iostream>         // Include input/output operations
-#include <netinet/in.h>     // Include structures for the internet domain address
-#include <sys/socket.h>     // Include socket functions
-#include <unistd.h>         // Include standard symbolic constants and types
+#include <cstring>
+#include <iostream>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <unistd.h>
 #include <thread>
+#include <mutex>
+// #include <arpa/inet.h>
 
 class Client
 {
     private:
     int clientSocket;
     sockaddr_in serverAddress;
+    std::string message{""};
+    std::mutex mt;
 
     public:
-    Client() = default;
+    Client(const std::string& message);
+    Client() = delete;
     ~Client();
 
-    Client(const Client&) = delete;
-    Client& operator=(const Client&) = delete;
-
+    Client(const Client&) = default;
     Client(Client&&) = delete;
+
+    Client& operator=(const Client&) = default;
     Client& operator=(Client&&) = delete;
 
     void start();

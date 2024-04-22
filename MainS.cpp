@@ -2,9 +2,11 @@
 
 int main()
 {
-    Server server;
+    SharedPointerOfServer server = Server::GetInstance();
+    
+    std::thread th1 = std::thread(&Server::start, server);
 
-    server.start();
-
+    th1.join();
+    
     return 0;
 }
