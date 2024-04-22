@@ -1,18 +1,27 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include <cstring>
-#include <iostream>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <thread>
-#include <mutex>
+#include <memory>           // For usage of smart pointers
+#include <cstring>          // Include c string functions
+#include <iostream>         // Include input/output operations
+#include <netinet/in.h>     // Include structures for the internet domain address
+#include <sys/socket.h>     // Include socket functions
+#include <unistd.h>         // Include standard symbolic constants and types
+#include <thread>           // To implement concurrency
+#include <mutex>            // To lock critical sections while performing threading
 // #include <arpa/inet.h>
 
-class Client
+// All custom exception files listed below
+#include "SocketCreationFailedException.h"
+#include "ClientConnectionFailedException.h"
+#include "MessageFailedException.h"
+#include "BindFailedException.h"
+#include "ListenFailedException.h"
+
+class Client    
 {
     private:
+    // Private data members of the client class
     int clientSocket;
     sockaddr_in serverAddress;
     std::string message{""};
