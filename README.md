@@ -2,11 +2,10 @@
 
 Implementation of Multi - Client and Single Server code design implemntation using Modern CPP constructs
 
-Summary Code Flow
 CODE DESIGN PATTERN DIAGRAM
-       
-        Server Socket
-            |
+
+            Server Socket
+                |
   ------- Socket Created  ---- Bind -----
    |                                  |
    |                                  |
