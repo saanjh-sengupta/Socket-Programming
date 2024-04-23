@@ -1,0 +1,4 @@
+/home/kpit/Desktop/KPIT Genesis 2024/Socket Programming/build/CMakeFiles/rebuild_cache.dir
+/home/kpit/Desktop/KPIT Genesis 2024/Socket Programming/build/CMakeFiles/edit_cache.dir
+/home/kpit/Desktop/KPIT Genesis 2024/Socket Programming/build/CMakeFiles/client.dir
+/home/kpit/Desktop/KPIT Genesis 2024/Socket Programming/build/CMakeFiles/server.dir
